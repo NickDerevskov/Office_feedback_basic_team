@@ -252,16 +252,21 @@ def on_click(*params):
         bot.messaging.send_message(peer, "Введите имя компании")
 
         def waiting_of_creating_company(*params):
-            users.insert_one(
-                {
-                    "type": "Office-manager",
-                    "company": params[0].message.textMessage.text,
-                    "id": id,
-                }
-            )
-            bot.messaging.send_message(
-                peer, "Компания успешно создана. Теперь вы админ"
-            )
+            company_name = params[0].message.textMessage.text
+            exits_companies_dict = list(users.find({"company": company_name}))
+            exits_companies_list = [x["company"] for x in exits_companies_dict]
+
+            if company_name in exits_companies_list:
+                bot.messaging.send_message(
+                    peer, "Компания с таким именем уже существует"
+                )
+            else:
+                users.insert_one(
+                    {"type": "Office-manager", "company": company_name, "id": id}
+                )
+                bot.messaging.send_message(
+                    peer, "Компания успешно создана. Теперь вы Офис менеджер"
+                )
             auth(id, peer, *params)
             bot.messaging.on_message(main, on_click)
 
@@ -333,7 +338,12 @@ def on_click(*params):
         bot.messaging.send_message(peer, "Токен для ивент менеджера: " + token)
 
     if value == "get_guides":
-        get_guides(id, peer)
+        if is_manager(id):
+            my_list = event_list(id)
+            for event in my_list:
+                on_msg("Название мероприятия: "+event["title"], peer)
+        else:
+            get_guides(id, peer)
 
     if value == "get_feedbacks":
         feedbacks = guide_list(id)

@@ -12,7 +12,7 @@ client = MongoClient(
 db = client.feedback_hackaton
 users = db.users
 guides = db.guides
-bot_token = "d3bdd8ab024c03560ecf3350bcc3c250a0bbe9cd"
+bot_token = "c06ce466243c8dbd318b097db9813d9200ddd13f"
 tokens = db.tokens
 events = db.events
 

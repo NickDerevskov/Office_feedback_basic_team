@@ -19,7 +19,7 @@ events = db.events
 # https://github.com/dialogs/chatbot-hackathon - basic things
 # https://hackathon.transmit.im/web/#/im/u2108492517 - bot
 
-
+ 
 def add_user_to_admins(id, company):
     users.insert_one({"type": "Office-manager", "id": id, "company": company})
 
